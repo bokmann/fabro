@@ -1708,7 +1708,7 @@ pub(crate) fn compact_inspect(output: &Output) -> Value {
         items.into_iter()
             .map(|item| {
                 let run_spec = item["run_spec"].clone();
-                let checkpoint = item["checkpoint"].clone();
+                let last_checkpoint = item["last_checkpoint"].clone();
                 let conclusion = item["conclusion"].clone();
                 let sandbox = item["sandbox"].clone();
                 let dry_run = run_spec
@@ -1745,11 +1745,11 @@ pub(crate) fn compact_inspect(output: &Output) -> Value {
                             "stage_count": conclusion["stages"].as_array().map(|stages| stages.len()),
                         })
                     }),
-                    "checkpoint": checkpoint.as_object().map(|_| {
+                    "last_checkpoint": last_checkpoint.as_object().map(|_| {
                         serde_json::json!({
-                            "current_node": checkpoint["current_node"],
-                            "completed_nodes": checkpoint["completed_nodes"],
-                            "next_node_id": checkpoint["next_node_id"],
+                            "current_node": last_checkpoint["current_node"],
+                            "completed_nodes": last_checkpoint["completed_nodes"],
+                            "next_node_id": last_checkpoint["next_node_id"],
                         })
                     }),
                     "sandbox": sandbox.as_object().map(|_| {
@@ -1771,7 +1771,7 @@ pub(crate) fn compact_git_inspect(output: &Output) -> Value {
             .map(|item| {
                 let run_spec = item["run_spec"].clone();
                 let start_record = item["start_record"].clone();
-                let checkpoint = item["checkpoint"].clone();
+                let last_checkpoint = item["last_checkpoint"].clone();
                 let conclusion = item["conclusion"].clone();
                 let sandbox = item["sandbox"].clone();
                 serde_json::json!({
@@ -1807,11 +1807,11 @@ pub(crate) fn compact_git_inspect(output: &Output) -> Value {
                             "stage_count": conclusion["stages"].as_array().map(|stages| stages.len()),
                         })
                     }),
-                    "checkpoint": checkpoint.as_object().map(|_| {
+                    "last_checkpoint": last_checkpoint.as_object().map(|_| {
                         serde_json::json!({
-                            "current_node": checkpoint["current_node"],
-                            "completed_nodes": checkpoint["completed_nodes"],
-                            "next_node_id": checkpoint["next_node_id"],
+                            "current_node": last_checkpoint["current_node"],
+                            "completed_nodes": last_checkpoint["completed_nodes"],
+                            "next_node_id": last_checkpoint["next_node_id"],
                             "git_commit_sha": "[SHA]",
                         })
                     }),

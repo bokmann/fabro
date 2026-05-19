@@ -9,14 +9,14 @@ use crate::server_runs::ServerRunInfo;
 
 #[derive(Debug, Serialize)]
 pub(crate) struct InspectOutput {
-    pub run_id:       String,
-    pub parent_id:    Option<String>,
-    pub status:       RunStatus,
-    pub run_spec:     Option<serde_json::Value>,
-    pub start_record: Option<serde_json::Value>,
-    pub conclusion:   Option<serde_json::Value>,
-    pub checkpoint:   Option<serde_json::Value>,
-    pub sandbox:      Option<serde_json::Value>,
+    pub run_id:          String,
+    pub parent_id:       Option<String>,
+    pub status:          RunStatus,
+    pub run_spec:        Option<serde_json::Value>,
+    pub start_record:    Option<serde_json::Value>,
+    pub conclusion:      Option<serde_json::Value>,
+    pub last_checkpoint: Option<serde_json::Value>,
+    pub sandbox:         Option<serde_json::Value>,
 }
 
 pub(crate) async fn run(args: &InspectArgs, base_ctx: &CommandContext) -> Result<()> {
@@ -33,7 +33,7 @@ pub(crate) async fn run(args: &InspectArgs, base_ctx: &CommandContext) -> Result
 }
 
 fn inspect_run_state(run: &ServerRunInfo, state: RunProjection) -> InspectOutput {
-    let checkpoint = state
+    let last_checkpoint = state
         .current_checkpoint()
         .and_then(|record| serde_json::to_value(record).ok());
     InspectOutput {
@@ -47,7 +47,7 @@ fn inspect_run_state(run: &ServerRunInfo, state: RunProjection) -> InspectOutput
         conclusion: state
             .conclusion
             .and_then(|record| serde_json::to_value(record).ok()),
-        checkpoint,
+        last_checkpoint,
         sandbox: state
             .sandbox
             .and_then(|record| serde_json::to_value(record).ok()),

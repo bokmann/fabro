@@ -207,7 +207,7 @@ fn inspect_resolves_selector_via_server_endpoint() {
         },
         "start_record": null,
         "conclusion": null,
-        "checkpoint": null,
+        "last_checkpoint": null,
         "sandbox": null
       }
     ]
@@ -312,7 +312,7 @@ fn inspect_created_run_shows_run_spec_without_start_or_conclusion() {
         },
         "start_record": null,
         "conclusion": null,
-        "checkpoint": null,
+        "last_checkpoint": null,
         "sandbox": {
           "provider": "local"
         }
@@ -359,7 +359,7 @@ fn inspect_completed_run_shows_run_start_conclusion_checkpoint() {
           "duration_ms": "[DURATION_MS]",
           "stage_count": null
         },
-        "checkpoint": {
+        "last_checkpoint": {
           "current_node": "report",
           "completed_nodes": [
             "start",
@@ -390,6 +390,14 @@ fn inspect_json_omits_run_dir() {
     assert!(
         first.get("run_dir").is_none(),
         "inspect JSON should not expose run_dir"
+    );
+    assert!(
+        first.get("checkpoint").is_none(),
+        "inspect JSON should not expose the old checkpoint key"
+    );
+    assert!(
+        first.get("last_checkpoint").is_some(),
+        "inspect JSON should expose last_checkpoint"
     );
 }
 
@@ -431,7 +439,7 @@ fn inspect_completed_run_reads_store_without_disk_metadata_files() {
           "duration_ms": "[DURATION_MS]",
           "stage_count": null
         },
-        "checkpoint": {
+        "last_checkpoint": {
           "current_node": "report",
           "completed_nodes": [
             "start",
@@ -491,7 +499,7 @@ fn inspect_git_backed_run_exposes_checkpoint_and_sandbox_state() {
           "final_git_commit_sha": "[SHA]",
           "stage_count": null
         },
-        "checkpoint": {
+        "last_checkpoint": {
           "current_node": "step_two",
           "completed_nodes": [
             "start",
